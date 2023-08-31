@@ -149,6 +149,23 @@ public class FieldsServiceImpl implements FieldsService {
     }
 
 
+    @Override
+    public Long getCount(Optional<FieldsFilter> fieldsFilter) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Field> root = criteriaQuery.from(Field.class);
 
+        List<Predicate> predicates = new ArrayList<>();
 
+        fieldsFilter.ifPresent(field -> {
+            field.getDataType().ifPresent(dataType -> predicates.add(criteriaBuilder.equal(root.get(Field_.DATATYPE), dataType)));
+            field.getFieldType().ifPresent(fieldType -> predicates.add(criteriaBuilder.equal(root.get(Field_.FIELDTYPE), fieldType)));
+            field.getFieldName().ifPresent(fieldName -> predicates.add(criteriaBuilder.equal(root.get(Field_.FIELDNAME), fieldName)));
+        });
+
+        criteriaQuery.select(criteriaBuilder.count(root.get(Field_.ID))).distinct(true).where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
+
+        TypedQuery<Long> typedQuery = entityManager.createQuery(criteriaQuery);
+        return typedQuery.getSingleResult();
+    }
 }

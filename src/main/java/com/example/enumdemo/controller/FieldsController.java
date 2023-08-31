@@ -33,7 +33,6 @@ public class FieldsController {
         return new ResponseEntity<>(mapper.toDto(fieldsService.getFieldById(id)), HttpStatus.OK);
     }
 
-
     @PostMapping("/create/field")
     public ResponseEntity<FieldsMasterDTO> createField(@RequestBody FieldsMasterDTO fieldDTO)
     {
@@ -70,4 +69,9 @@ public class FieldsController {
         return new ResponseEntity<>(fieldsService.getListByFilterSortingAndPaging(fieldsFilter,pageable),HttpStatus.OK);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> getFieldsCount(Optional<FieldsFilter> fieldsFilter)
+    {
+        return new ResponseEntity<>(fieldsService.getCount(fieldsFilter),HttpStatus.OK);
+    }
 }

@@ -25,4 +25,6 @@ public interface FieldsService {
    ResponseDto getFieldsPagingAndSorting(int offset, int pageSize, String field);
 
    ResponseDto getListByFilterSortingAndPaging(Optional<FieldsFilter> fieldsFilter, Pageable pageable);
+
+   Long getCount(Optional<FieldsFilter> fieldsFilter);
 }
